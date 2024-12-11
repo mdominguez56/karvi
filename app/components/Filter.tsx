@@ -6,7 +6,6 @@ const Filter: React.FC = () => {
   const [filters, setFilters] = useState({
     brand: "",
     city: "",
-    model: "",
     year: "",
   });
 
@@ -19,31 +18,40 @@ const Filter: React.FC = () => {
   };
 
   return (
-    <div className="mb-6 p-4 bg-white rounded shadow">
-      <h2 className="text-lg font-bold mb-4">Filtrar autos</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block font-medium">Marca:</label>
-          <input
-            type="text"
-            name="brand"
-            value={filters.brand}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-          />
-        </div>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-lg font-bold">Filtrar autos</h2>
 
-        <div>
-          <label className="block font-medium">Ciudad:</label>
-          <input
-            type="text"
-            name="city"
-            value={filters.city}
-            onChange={handleInputChange}
-            className="border p-2 rounded w-full"
-          />
-        </div>
+      <div>
+        <label className="block font-medium">Marca:</label>
+        <input
+          type="text"
+          name="brand"
+          value={filters.brand}
+          onChange={handleInputChange}
+          className="border p-2 rounded w-full"
+        />
+      </div>
 
+      <div>
+        <label className="block font-medium">Ciudad:</label>
+        <input
+          type="text"
+          name="city"
+          value={filters.city}
+          onChange={handleInputChange}
+          className="border p-2 rounded w-full"
+        />
+      </div>
+
+      <div>
+        <label className="block font-medium">Año:</label>
+        <input
+          type="text"
+          name="year"
+          value={filters.year}
+          onChange={handleInputChange}
+          className="border p-2 rounded w-full"
+        />
       </div>
     </div>
   );

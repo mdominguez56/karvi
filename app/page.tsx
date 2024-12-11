@@ -1,10 +1,11 @@
 import Filter from "./components/Filter";
 import CarGrid from "./components/CarGrid";
 
-const API_URL = "https://ast.prd.karvi.com.ar/challenge/cars/ASST-challenge-01JEVJTR90HVPSS2NRPPG02CJ3.json";
-
 async function fetchCars() {
-  const res = await fetch(API_URL, { next: { revalidate: 60 } });
+  const res = await fetch(
+    "https://ast.prd.karvi.com.ar/challenge/cars/ASST-challenge-01JEVJTR90HVPSS2NRPPG02CJ3.json",
+    { next: { revalidate: 7200 } }
+  );
   if (!res.ok) {
     throw new Error("Error fetching cars data");
   }
@@ -13,13 +14,17 @@ async function fetchCars() {
 }
 
 export default async function Home() {
-  const cars = await fetchCars();
+  const cars = await fetchCars(); 
 
   return (
-    <div className="flex flex-col gap-6">
-      <Filter />
+    <div className="flex flex-col lg:flex-row gap-6">
+      <aside className="w-full lg:w-1/4 bg-white p-4 shadow rounded">
+        <Filter />
+      </aside>
 
-      <CarGrid cars={cars} />
+      <section className="flex-1">
+        <CarGrid cars={cars} /> 
+      </section>
     </div>
   );
 }
