@@ -1,11 +1,6 @@
-interface FilterSectionProps {
-    title?: string;
-    items?: string[];
-    onClickItem?: (item: string) => void;
-    appliedFilters?: string[];
-  }
+import { FilterSectionProps } from "../types"
   
-  const FilterSection: React.FC<FilterSectionProps> = ({
+const FilterSection: React.FC<FilterSectionProps> = ({
     items,
     onClickItem,
     appliedFilters = [],

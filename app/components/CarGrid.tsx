@@ -1,21 +1,7 @@
 import React from "react";
 import CarCard from "./CarCard";
+import { CarGridProps } from "../types"
 
-interface Car {
-  id: number;
-  year: number;
-  mileage: number;
-  brand: string;
-  model: string;
-  version: string;
-  price: number;
-  city: string;
-}
-
-interface CarGridProps {
-  cars: Car[];
-  viewMode: "grid" | "list";
-}
 
 const CarGrid: React.FC<CarGridProps> = ({ cars, viewMode }) => {
   return (

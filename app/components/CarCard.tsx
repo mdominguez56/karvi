@@ -3,22 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
-
-interface Car {
-  id: number;
-  year: number;
-  mileage: number;
-  brand: string;
-  model: string;
-  version: string;
-  price: number;
-  city: string;
-}
-
-interface CarCardProps {
-  car: Car;
-  viewMode: "grid" | "list";
-}
+import { CarCardProps } from "../types"
 
 const CarCard: React.FC<CarCardProps> = ({ car, viewMode }) => {
   const [currentImage, setCurrentImage] = useState(0);

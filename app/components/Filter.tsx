@@ -4,15 +4,7 @@ import React, { useState } from "react";
 import FilterSection from "./FilterSection";
 import { Car } from "../types";
 import { FaChevronDown } from "react-icons/fa6";
-
-interface FilterProps {
-  cars: Car[];
-  filteredCars: Car[];
-  onFilter: (filterType: string, value: string) => void;
-  appliedFilters: Record<string, string[]>;
-  onPriceFilter: (min: number | "", max: number | "") => void;
-  priceFilter: { min: number | ""; max: number | "" };
-}
+import { FilterProps } from "../types"
 
 const mapSectionToKey = (section: string): keyof Car => {
   switch (section) {
