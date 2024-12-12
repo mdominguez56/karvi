@@ -13,10 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased bg-gray-100 text-gray-900">
-        <header className="bg-blue-600 text-white p-4 text-center font-bold text-xl">
-          Catálogo de Autos
-        </header>
+      <body className="antialiased bg-white text-gray-900">
         <main className="container mx-auto p-4">{children}</main>
       </body>
     </html>

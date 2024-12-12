@@ -18,7 +18,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      <aside className="w-full lg:w-1/4 bg-white p-4 shadow rounded">
+      <aside className="w-full lg:w-1/4 bg-white p-4 ">
         <Filter />
       </aside>
 
