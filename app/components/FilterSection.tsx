@@ -14,14 +14,17 @@ interface FilterSectionProps {
       <div className="border-b pb-2">
         <ul className="mt-2 text-sm text-gray-600">
           {items?.map((item) => {
-            const isSelected = appliedFilters.includes(item.split(" (")[0]);
+            const [value, count] = item.split(" (");
+            const isAvailable = parseInt(count.replace(")", ""), 10) > 0;
+            const isSelected = appliedFilters.includes(value);
+  
             return (
               <li
-                key={item}
+                key={value}
                 className={`flex justify-between cursor-pointer ${
                   isSelected ? "font-bold text-black" : ""
-                }`}
-                onClick={() => onClickItem?.(item)}
+                } ${isAvailable ? "" : "opacity-50 cursor-not-allowed"}`}
+                onClick={() => isAvailable && onClickItem?.(item)}
               >
                 <span>{item}</span>
               </li>

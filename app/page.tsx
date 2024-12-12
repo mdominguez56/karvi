@@ -46,11 +46,11 @@ const Page: React.FC = () => {
     setAppliedFilters(newFilters);
 
     if (Object.keys(newFilters).length === 0) {
-      setFilteredCars(cars); 
+      setFilteredCars(cars);
     } else {
       setFilteredCars(
         cars.filter((car) =>
-          Object.entries(newFilters).some(([key, values]) =>
+          Object.entries(newFilters).every(([key, values]) =>
             values.includes(String(car[key as keyof Car]))
           )
         )
