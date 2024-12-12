@@ -38,7 +38,6 @@ const CarCard: React.FC<Car> = ({
 
   return (
     <div className="p-4 border rounded-lg shadow bg-white flex flex-col gap-4 relative">
-      {/* Carrusel de imágenes */}
       <div className="relative w-full h-48 overflow-hidden rounded-lg">
         <Image
           src={images[currentImage]}
@@ -48,7 +47,6 @@ const CarCard: React.FC<Car> = ({
           className="w-full h-full object-cover"
         />
 
-        {/* Botón anterior */}
         <button
           onClick={handlePrevImage}
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-75 hover:opacity-100"
