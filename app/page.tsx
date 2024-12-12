@@ -6,7 +6,7 @@ import CarGrid from "./components/CarGrid";
 import { Car } from "./types";
 
 import { IoCloseOutline } from "react-icons/io5";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { RiDeleteBin6Line, RiSoundModuleLine } from "react-icons/ri";
 import { FaTh, FaList } from "react-icons/fa";
 
 const Page: React.FC = () => {
@@ -14,6 +14,7 @@ const Page: React.FC = () => {
   const [filteredCars, setFilteredCars] = useState<Car[]>([]);
   const [appliedFilters, setAppliedFilters] = useState<Record<string, string[]>>({});
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   useEffect(() => {
     const loadCars = async () => {
@@ -69,12 +70,23 @@ const Page: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      <aside className="w-full lg:w-1/4 bg-white p-4">
-        <Filter cars={cars} onFilter={handleFilter} appliedFilters={appliedFilters} />
-      </aside>
+      <div className="flex items-center justify-between px-4">
+        <button
+          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition lg:hidden"
+          onClick={() => setShowFilters((prev) => !prev)}
+        >
+          <RiSoundModuleLine size={16} />
+          <span>{showFilters ? "Ocultar filtros" : "Filtrar"}</span>
+        </button>
+      </div>
+
+      {showFilters && (
+        <aside className="w-full lg:w-1/4 bg-white p-4">
+          <Filter cars={cars} onFilter={handleFilter} appliedFilters={appliedFilters} />
+        </aside>
+      )}
 
       <section className="flex-1 flex flex-col gap-4">
-        {/* Switch de vista */}
         <div className="flex items-center justify-between px-4">
           <div className="flex flex-wrap items-center gap-2">
             {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
@@ -119,7 +131,7 @@ const Page: React.FC = () => {
               </button>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 lg:hidden">
             <button
               className={`p-2 rounded-full ${
                 viewMode === "grid" ? "bg-blue-100 text-blue-500" : "text-gray-500"
