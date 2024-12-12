@@ -15,15 +15,12 @@ interface Car {
   city: string;
 }
 
-const CarCard: React.FC<Car> = ({
-  year,
-  mileage,
-  brand,
-  model,
-  version,
-  price,
-  city,
-}) => {
+interface CarCardProps {
+  car: Car;
+  viewMode: "grid" | "list";
+}
+
+const CarCard: React.FC<CarCardProps> = ({ car, viewMode }) => {
   const [currentImage, setCurrentImage] = useState(0);
 
   const images = ["/car-1.png", "/car-2.png", "/car-3.png"];
@@ -37,52 +34,54 @@ const CarCard: React.FC<Car> = ({
   };
 
   return (
-    <div className="p-4 border rounded-lg shadow bg-white flex flex-col gap-4 relative">
-      <div className="relative w-full h-48 overflow-hidden rounded-lg">
+    <div
+      className={`p-4 border rounded-lg shadow bg-white ${
+        viewMode === "grid" ? "flex flex-col gap-4" : "flex flex-row items-center gap-4"
+      }`}
+    >
+      <div
+        className={`relative overflow-hidden rounded-lg ${
+          viewMode === "grid" ? "w-full h-48" : "w-1/4 h-32"
+        }`}
+      >
         <Image
           src={images[currentImage]}
-          alt={`Imagen ${currentImage + 1} del auto`}
-          width={400}
-          height={300}
-          className="w-full h-full object-cover"
+          alt={`${car.brand} ${car.model} - Imagen ${currentImage + 1}`}
+          fill
+          className="object-cover"
         />
-
         <button
           onClick={handlePrevImage}
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-75 hover:opacity-100"
+          aria-label="Imagen anterior"
         >
           <FaAngleLeft size={16} />
         </button>
-
         <button
           onClick={handleNextImage}
           className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-75 hover:opacity-100"
+          aria-label="Siguiente imagen"
         >
           <FaAngleRight size={16} />
         </button>
       </div>
 
-      <div className="flex mt-2 text-xs text-gray-600">
-        <span className="bg-gray-200 px-2 py-1 rounded font-medium">{year}</span>
-        <span className="bg-gray-200 px-2 py-1 rounded font-medium ml-2">
-          {mileage.toLocaleString()} km
-        </span>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-bold">
-          {brand} {model}
+      <div className="flex flex-col flex-1">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <span className="bg-gray-200 px-2 py-1 rounded">{car.year}</span>
+          <span className="bg-gray-200 px-2 py-1 rounded">
+            {car.mileage.toLocaleString()} km
+          </span>
+        </div>
+        <h3 className="text-lg font-bold mt-2">
+          {car.brand} {car.model}
         </h3>
-        <p className="text-sm text-gray-600">{version}</p>
-        <p className="text-orange-500 font-bold text-xl">
-          R$ {price.toLocaleString()}
+        <p className="text-sm text-gray-600">{car.version}</p>
+        <p className="text-orange-500 font-bold text-xl mt-2">
+          R$ {car.price.toLocaleString()}
         </p>
-        <p className="text-sm text-gray-500">{city}</p>
+        <p className="text-sm text-gray-500">{car.city}</p>
       </div>
-
-      <button className="bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition">
-        Simular parcelas
-      </button>
     </div>
   );
 };
