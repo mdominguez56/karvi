@@ -2,31 +2,32 @@ interface FilterSectionProps {
     title?: string;
     items?: string[];
     onClickItem?: (item: string) => void;
+    appliedFilters?: string[];
   }
   
-  const FilterSection: React.FC<FilterSectionProps> = ({ title, items, onClickItem }) => {
+  const FilterSection: React.FC<FilterSectionProps> = ({
+    items,
+    onClickItem,
+    appliedFilters = [],
+  }) => {
     return (
       <div className="border-b pb-2">
-        <button
-          type="button"
-          className="w-full text-left font-medium flex justify-between items-center"
-        >
-          {title}
-        </button>
-  
-        {items && (
-          <ul className="mt-2 text-sm text-gray-600">
-            {items.map((item) => (
+        <ul className="mt-2 text-sm text-gray-600">
+          {items?.map((item) => {
+            const isSelected = appliedFilters.includes(item.split(" (")[0]);
+            return (
               <li
                 key={item}
-                className="flex justify-between cursor-pointer"
+                className={`flex justify-between cursor-pointer ${
+                  isSelected ? "font-bold text-black" : ""
+                }`}
                 onClick={() => onClickItem?.(item)}
               >
                 <span>{item}</span>
               </li>
-            ))}
-          </ul>
-        )}
+            );
+          })}
+        </ul>
       </div>
     );
   };
