@@ -19,6 +19,7 @@ const Page: React.FC = () => {
   });
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true); 
 
   useEffect(() => {
     const loadCars = async () => {
@@ -32,6 +33,8 @@ const Page: React.FC = () => {
         setFilteredCars(data);
       } catch (error) {
         console.error("Error loading cars:", error);
+      } finally {
+        setIsLoading(false); 
       }
     };
 
@@ -94,6 +97,14 @@ const Page: React.FC = () => {
     setPriceFilter({ min: "", max: "" });
     setFilteredCars(cars);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="spinner border-t-blue-500 border-4 w-12 h-12 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
