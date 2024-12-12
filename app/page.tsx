@@ -46,17 +46,21 @@ const Page: React.FC = () => {
 
     setAppliedFilters(newFilters);
 
-    if (Object.keys(newFilters).length === 0) {
-      setFilteredCars(cars);
-    } else {
-      setFilteredCars(
-        cars.filter((car) =>
-          Object.entries(newFilters).every(([key, values]) =>
-            values.includes(String(car[key as keyof Car]))
-          )
+    applyFilters(newFilters);
+  };
+
+  const applyFilters = (filters: Record<string, string[]>) => {
+    let filtered = cars;
+
+    if (Object.keys(filters).length > 0) {
+      filtered = cars.filter((car) =>
+        Object.entries(filters).every(([key, values]) =>
+          values.includes(String(car[key as keyof Car]))
         )
       );
     }
+
+    setFilteredCars(filtered);
   };
 
   const handleRemoveFilter = (filterType: string, value: string) => {
@@ -70,87 +74,90 @@ const Page: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between px-4 lg:hidden">
         <button
-          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition lg:hidden"
+          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
           onClick={() => setShowFilters((prev) => !prev)}
         >
           <RiSoundModuleLine size={16} />
           <span>{showFilters ? "Ocultar filtros" : "Filtrar"}</span>
         </button>
+
+        <div className="flex gap-2">
+          <button
+            className={`p-2 rounded-full ${
+              viewMode === "grid" ? "bg-blue-100 text-blue-500" : "text-gray-500"
+            }`}
+            onClick={() => setViewMode("grid")}
+            aria-label="Ver como grilla"
+          >
+            <FaTh />
+          </button>
+          <button
+            className={`p-2 rounded-full ${
+              viewMode === "list" ? "bg-blue-100 text-blue-500" : "text-gray-500"
+            }`}
+            onClick={() => setViewMode("list")}
+            aria-label="Ver como lista"
+          >
+            <FaList />
+          </button>
+        </div>
       </div>
 
-      {showFilters && (
-        <aside className="w-full lg:w-1/4 bg-white p-4">
-          <Filter cars={cars} onFilter={handleFilter} appliedFilters={appliedFilters} />
-        </aside>
-      )}
+      <aside
+        className={`${
+          showFilters || !window.matchMedia("(max-width: 1024px)").matches
+            ? "block"
+            : "hidden"
+        } w-full lg:w-1/4 bg-white p-4`}
+      >
+        <Filter cars={cars} onFilter={handleFilter} appliedFilters={appliedFilters} />
+      </aside>
 
       <section className="flex-1 flex flex-col gap-4">
-        <div className="flex items-center justify-between px-4">
-          <div className="flex flex-wrap items-center gap-2">
-            {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
-              values.map((value) => (
-                <div
-                  key={`${filterType}-${value}`}
-                  className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
-                  style={{
-                    borderRadius: "64px",
-                    padding: "4px 12px",
-                    height: "28px",
-                    borderWidth: "1px",
-                    borderColor: "#B4BEF5",
-                    gap: "8px",
-                  }}
-                >
-                  <span className="text-sm font-medium">{value}</span>
-                  <button
-                    className="ml-2 text-blue-500 hover:text-blue-700"
-                    onClick={() => handleRemoveFilter(filterType, value)}
-                    aria-label={`Remove filter ${value}`}
-                  >
-                    <IoCloseOutline size={16} />
-                  </button>
-                </div>
-              ))
-            )}
-            {Object.keys(appliedFilters).length > 0 && (
-              <button
-                className="flex items-center bg-transparent text-[#566DED] font-medium"
+        <div className="flex flex-wrap items-center gap-2 px-4">
+          {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
+            values.map((value) => (
+              <div
+                key={`${filterType}-${value}`}
+                className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
                 style={{
-                  border: "none",
+                  borderRadius: "64px",
+                  padding: "4px 12px",
+                  height: "28px",
+                  borderWidth: "1px",
+                  borderColor: "#B4BEF5",
                   gap: "8px",
-                  fontFamily: "Raleway, sans-serif",
-                  fontSize: "14px",
-                  lineHeight: "20px",
                 }}
-                onClick={handleClearFilters}
               >
-                <RiDeleteBin6Line size={16} />
-                <span>Limpiar filtros</span>
-              </button>
-            )}
-          </div>
-          <div className="flex gap-2 lg:hidden">
+                <span className="text-sm font-medium">{value}</span>
+                <button
+                  className="ml-2 text-blue-500 hover:text-blue-700"
+                  onClick={() => handleRemoveFilter(filterType, value)}
+                  aria-label={`Remove filter ${value}`}
+                >
+                  <IoCloseOutline size={16} />
+                </button>
+              </div>
+            ))
+          )}
+          {Object.keys(appliedFilters).length > 0 && (
             <button
-              className={`p-2 rounded-full ${
-                viewMode === "grid" ? "bg-blue-100 text-blue-500" : "text-gray-500"
-              }`}
-              onClick={() => setViewMode("grid")}
-              aria-label="Ver como grilla"
+              className="flex items-center bg-transparent text-[#566DED] font-medium"
+              style={{
+                border: "none",
+                gap: "8px",
+                fontFamily: "Raleway, sans-serif",
+                fontSize: "14px",
+                lineHeight: "20px",
+              }}
+              onClick={handleClearFilters}
             >
-              <FaTh />
+              <RiDeleteBin6Line size={16} />
+              <span>Limpiar filtros</span>
             </button>
-            <button
-              className={`p-2 rounded-full ${
-                viewMode === "list" ? "bg-blue-100 text-blue-500" : "text-gray-500"
-              }`}
-              onClick={() => setViewMode("list")}
-              aria-label="Ver como lista"
-            >
-              <FaList />
-            </button>
-          </div>
+          )}
         </div>
 
         <CarGrid cars={filteredCars} viewMode={viewMode} />
