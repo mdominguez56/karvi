@@ -1,5 +1,5 @@
 interface FilterSectionProps {
-    title: string;
+    title?: string;
     items?: string[];
     onClickItem?: (item: string) => void;
   }
