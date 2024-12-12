@@ -7,8 +7,11 @@ import { FaChevronDown } from "react-icons/fa6";
 
 interface FilterProps {
   cars: Car[];
+  filteredCars: Car[];
   onFilter: (filterType: string, value: string) => void;
   appliedFilters: Record<string, string[]>;
+  onPriceFilter: (min: number | "", max: number | "") => void;
+  priceFilter: { min: number | ""; max: number | "" };
 }
 
 const mapSectionToKey = (section: string): keyof Car => {
@@ -28,8 +31,23 @@ const mapSectionToKey = (section: string): keyof Car => {
   }
 };
 
-const Filter: React.FC<FilterProps> = ({ cars, onFilter, appliedFilters }) => {
+const formatNumber = (value: number | ""): string =>
+  value !== "" ? `$${value.toLocaleString("en-US")}` : "";
+
+const parseNumber = (value: string): number | "" =>
+  value === "" ? "" : parseInt(value.replace(/[^\d]/g, ""), 10) || "";
+
+const Filter: React.FC<FilterProps> = ({
+  cars,
+  filteredCars,
+  onFilter,
+  appliedFilters,
+  onPriceFilter,
+  priceFilter,
+}) => {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [minPrice, setMinPrice] = useState<number | "">(priceFilter.min || "");
+  const [maxPrice, setMaxPrice] = useState<number | "">(priceFilter.max || "");
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) =>
@@ -40,28 +58,26 @@ const Filter: React.FC<FilterProps> = ({ cars, onFilter, appliedFilters }) => {
   };
 
   const getFilteredValuesWithCounts = (key: keyof Car) => {
-    const counts = cars.reduce((acc: Record<string, number>, car) => {
-      const isFiltered = Object.entries(appliedFilters).every(([filterKey, values]) => {
-        if (filterKey === String(key)) {
-          return true;
-        }
-        return values.includes(String(car[filterKey as keyof Car]));
-      });
-
-      if (isFiltered) {
-        const value = String(car[key]);
-        acc[value] = (acc[value] || 0) + 1;
-      }
-
+    const counts = filteredCars.reduce((acc: Record<string, number>, car) => {
+      const value = String(car[key]);
+      acc[value] = (acc[value] || 0) + 1;
       return acc;
     }, {});
 
-    if (appliedFilters[String(key)]?.length) {
-      const filteredOptions = appliedFilters[String(key)];
-      return filteredOptions.map((value) => `${value} (${counts[value] || 0})`);
-    }
+    const options = cars.reduce((acc: Record<string, number>, car) => {
+      const value = String(car[key]);
+      acc[value] = (acc[value] || 0) + 1;
+      return acc;
+    }, {});
 
-    return Object.entries(counts).map(([value, count]) => `${value} (${count})`);
+    return Object.entries(options).map(([value]) => {
+      const filteredCount = counts[value] || 0;
+      return `${value} (${filteredCount})`;
+    });
+  };
+
+  const handleApplyPriceFilter = () => {
+    onPriceFilter(minPrice, maxPrice);
   };
 
   return (
@@ -91,6 +107,46 @@ const Filter: React.FC<FilterProps> = ({ cars, onFilter, appliedFilters }) => {
           )}
         </div>
       ))}
+
+      <div>
+        <button
+          onClick={() => toggleSection("Precio")}
+          className="w-full flex justify-between items-center text-left font-medium"
+        >
+          Precio
+          <FaChevronDown
+            className={`transition-transform ${
+              expandedSections.includes("Precio") ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+        {expandedSections.includes("Precio") && (
+          <div className="mt-2 flex flex-col gap-2">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="$ Mínimo"
+                value={formatNumber(minPrice)}
+                onChange={(e) => setMinPrice(parseNumber(e.target.value))}
+                className="border rounded p-2 flex-1"
+              />
+              <input
+                type="text"
+                placeholder="$ Máximo"
+                value={formatNumber(maxPrice)}
+                onChange={(e) => setMaxPrice(parseNumber(e.target.value))}
+                className="border rounded p-2 flex-1"
+              />
+            </div>
+            <button
+              onClick={handleApplyPriceFilter}
+              className="bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-lg shadow hover:bg-blue-600 transition"
+            >
+              Aplicar
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

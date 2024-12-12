@@ -13,6 +13,10 @@ const Page: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [filteredCars, setFilteredCars] = useState<Car[]>([]);
   const [appliedFilters, setAppliedFilters] = useState<Record<string, string[]>>({});
+  const [priceFilter, setPriceFilter] = useState<{ min: number | ""; max: number | "" }>({
+    min: "",
+    max: "",
+  });
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
@@ -46,18 +50,36 @@ const Page: React.FC = () => {
 
     setAppliedFilters(newFilters);
 
-    applyFilters(newFilters);
+    applyFilters(newFilters, priceFilter);
   };
 
-  const applyFilters = (filters: Record<string, string[]>) => {
+  const handlePriceFilter = (min: number | "", max: number | "") => {
+    const updatedPriceFilter = {
+      min: min,
+      max: max,
+    } as const;
+
+    setPriceFilter(updatedPriceFilter);
+    applyFilters(appliedFilters, updatedPriceFilter);
+  };
+
+  const applyFilters = (
+    filters: Record<string, string[]>,
+    price: { min: number | ""; max: number | "" }
+  ) => {
     let filtered = cars;
 
-    if (Object.keys(filters).length > 0) {
-      filtered = cars.filter((car) =>
-        Object.entries(filters).every(([key, values]) =>
+    if (Object.keys(filters).length > 0 || price.min !== "" || price.max !== "") {
+      filtered = cars.filter((car) => {
+        const matchesFilters = Object.entries(filters).every(([key, values]) =>
           values.includes(String(car[key as keyof Car]))
-        )
-      );
+        );
+
+        const meetsMin = price.min === "" || car.price >= price.min;
+        const meetsMax = price.max === "" || car.price <= price.max;
+
+        return matchesFilters && meetsMin && meetsMax;
+      });
     }
 
     setFilteredCars(filtered);
@@ -69,6 +91,7 @@ const Page: React.FC = () => {
 
   const handleClearFilters = () => {
     setAppliedFilters({});
+    setPriceFilter({ min: "", max: "" });
     setFilteredCars(cars);
   };
 
@@ -112,7 +135,14 @@ const Page: React.FC = () => {
             : "hidden"
         } w-full lg:w-1/4 bg-white p-4`}
       >
-        <Filter cars={cars} onFilter={handleFilter} appliedFilters={appliedFilters} />
+        <Filter
+          cars={cars}
+          filteredCars={filteredCars}
+          onFilter={handleFilter}
+          appliedFilters={appliedFilters}
+          onPriceFilter={handlePriceFilter}
+          priceFilter={priceFilter}
+        />
       </aside>
 
       <section className="flex-1 flex flex-col gap-4">
@@ -142,6 +172,34 @@ const Page: React.FC = () => {
               </div>
             ))
           )}
+          {priceFilter.min !== "" || priceFilter.max !== "" ? (
+            <div
+              className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
+              style={{
+                borderRadius: "64px",
+                padding: "4px 12px",
+                height: "28px",
+                borderWidth: "1px",
+                borderColor: "#B4BEF5",
+                gap: "8px",
+              }}
+            >
+              <span className="text-sm font-medium">
+                {priceFilter.min !== "" && priceFilter.max !== ""
+                  ? `$${priceFilter.min} - $${priceFilter.max}`
+                  : priceFilter.min !== ""
+                  ? `Min: $${priceFilter.min}`
+                  : `Max: $${priceFilter.max}`}
+              </span>
+              <button
+                className="ml-2 text-blue-500 hover:text-blue-700"
+                onClick={() => handlePriceFilter("", "")}
+                aria-label="Remove price filter"
+              >
+                <IoCloseOutline size={16} />
+              </button>
+            </div>
+          ) : null}
           {Object.keys(appliedFilters).length > 0 && (
             <button
               className="flex items-center bg-transparent text-[#566DED] font-medium"
