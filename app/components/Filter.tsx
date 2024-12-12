@@ -3,9 +3,10 @@
 import React from "react";
 import FilterSection from "./FilterSection";
 import { Car } from "../types";
+
 interface FilterProps {
   cars: Car[];
-  onFilter?: (filteredCars: Car[]) => void; 
+  onFilter?: (filteredCars: Car[], city: string) => void; // Prop para manejar el filtrado
 }
 
 const Filter: React.FC<FilterProps> = ({ cars, onFilter }) => {
@@ -17,7 +18,7 @@ const Filter: React.FC<FilterProps> = ({ cars, onFilter }) => {
   const handleCityFilter = (city: string) => {
     if (onFilter) {
       const filteredCars = cars.filter((car) => car.city === city);
-      onFilter(filteredCars);
+      onFilter(filteredCars, city);
     }
   };
 
@@ -31,8 +32,8 @@ const Filter: React.FC<FilterProps> = ({ cars, onFilter }) => {
         title="Ciudad"
         items={Object.entries(citiesWithCounts).map(
           ([city, count]) => `${city} (${count})`
-        )} 
-        onClickItem={(item) => handleCityFilter(item.split(" (")[0])} 
+        )}
+        onClickItem={(item) => handleCityFilter(item.split(" (")[0])}
       />
     </div>
   );
