@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import CarGrid from "./components/CarGrid";
+import SelectedFilters from "./components/SelectedFilters";
+import Pagination from "./components/Pagination";
 import { Car } from "./types";
-
-import { IoCloseOutline } from "react-icons/io5";
-import { RiDeleteBin6Line, RiSoundModuleLine } from "react-icons/ri";
+import { RiSoundModuleLine } from "react-icons/ri";
 import { FaTh, FaList } from "react-icons/fa";
 
 const ITEMS_PER_PAGE = 12;
@@ -57,7 +57,7 @@ const Page: React.FC = () => {
     setAppliedFilters(newFilters);
 
     applyFilters(newFilters, priceFilter);
-    setCurrentPage(1); // Reset to the first page
+    setCurrentPage(1);
   };
 
   const handlePriceFilter = (min: number | "", max: number | "") => {
@@ -68,7 +68,7 @@ const Page: React.FC = () => {
 
     setPriceFilter(updatedPriceFilter);
     applyFilters(appliedFilters, updatedPriceFilter);
-    setCurrentPage(1); // Reset to the first page
+    setCurrentPage(1);
   };
 
   const applyFilters = (
@@ -120,7 +120,6 @@ const Page: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      {/* Botón para alternar filtros en mobile */}
       <div className="flex items-center justify-between px-4 lg:hidden">
         <button
           className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
@@ -169,119 +168,23 @@ const Page: React.FC = () => {
         />
       </aside>
       <section className="flex-1 flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between px-4 gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
-              values.map((value) => (
-                <div
-                  key={`${filterType}-${value}`}
-                  className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
-                  style={{
-                    borderRadius: "64px",
-                    padding: "4px 12px",
-                    height: "28px",
-                    borderWidth: "1px",
-                    borderColor: "#B4BEF5",
-                    gap: "8px",
-                  }}
-                >
-                  <span className="text-sm font-medium">{value}</span>
-                  <button
-                    className="ml-2 text-blue-500 hover:text-blue-700"
-                    onClick={() => handleRemoveFilter(filterType, value)}
-                    aria-label={`Remove filter ${value}`}
-                  >
-                    <IoCloseOutline size={16} />
-                  </button>
-                </div>
-              ))
-            )}
-            {priceFilter.min !== "" || priceFilter.max !== "" ? (
-              <div
-                className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
-                style={{
-                  borderRadius: "64px",
-                  padding: "4px 12px",
-                  height: "28px",
-                  borderWidth: "1px",
-                  borderColor: "#B4BEF5",
-                  gap: "8px",
-                }}
-              >
-                <span className="text-sm font-medium">
-                  {priceFilter.min !== "" && priceFilter.max !== ""
-                    ? `$${priceFilter.min} - $${priceFilter.max}`
-                    : priceFilter.min !== ""
-                    ? `Min: $${priceFilter.min}`
-                    : `Max: $${priceFilter.max}`}
-                </span>
-                <button
-                  className="ml-2 text-blue-500 hover:text-blue-700"
-                  onClick={() => handlePriceFilter("", "")}
-                  aria-label="Remove price filter"
-                >
-                  <IoCloseOutline size={16} />
-                </button>
-              </div>
-            ) : null}
-          </div>
-          {Object.keys(appliedFilters).length > 0 && (
-            <button
-              className="flex items-center bg-transparent text-[#566DED] font-medium"
-              style={{
-                border: "none",
-                gap: "8px",
-                fontFamily: "Raleway, sans-serif",
-                fontSize: "14px",
-                lineHeight: "20px",
-              }}
-              onClick={handleClearFilters}
-            >
-              <RiDeleteBin6Line size={16} />
-              <span>Limpiar filtros</span>
-            </button>
-          )}
-        </div>
-
+        <SelectedFilters
+          appliedFilters={appliedFilters}
+          priceFilter={priceFilter}
+          handleRemoveFilter={handleRemoveFilter}
+          handleClearFilters={handleClearFilters}
+        />
         <div className="px-4 text-gray-700 font-medium">
           {filteredCars.length} carro
           {filteredCars.length !== 1 ? "s" : ""} encontrado
           {filteredCars.length !== 1 ? "s" : ""}
         </div>
-
         <CarGrid cars={currentItems} viewMode={viewMode} />
-
-        <div className="flex justify-between items-center px-4 mt-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="text-blue-500 hover:underline disabled:text-gray-400"
-          >
-            Anterior
-          </button>
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 rounded ${
-                  currentPage === i + 1
-                    ? "bg-blue-500 text-white"
-                    : "text-blue-500 hover:bg-blue-100"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="text-blue-500 hover:underline disabled:text-gray-400"
-          >
-            Próximo
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
       </section>
     </div>
   );
