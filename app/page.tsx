@@ -169,34 +169,11 @@ const Page: React.FC = () => {
       </aside>
 
       <section className="flex-1 flex flex-col gap-4">
-        <div className="flex flex-wrap items-center gap-2 px-4">
-          {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
-            values.map((value) => (
-              <div
-                key={`${filterType}-${value}`}
-                className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
-                style={{
-                  borderRadius: "64px",
-                  padding: "4px 12px",
-                  height: "28px",
-                  borderWidth: "1px",
-                  borderColor: "#B4BEF5",
-                  gap: "8px",
-                }}
-              >
-                <span className="text-sm font-medium">{value}</span>
-                <button
-                  className="ml-2 text-blue-500 hover:text-blue-700"
-                  onClick={() => handleRemoveFilter(filterType, value)}
-                  aria-label={`Remove filter ${value}`}
-                >
-                  <IoCloseOutline size={16} />
-                </button>
-              </div>
-            ))
-          )}
-          {priceFilter.min !== "" || priceFilter.max !== "" ? (
+      <div className="flex flex-wrap items-center gap-2 px-4">
+        {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
+          values.map((value) => (
             <div
+              key={`${filterType}-${value}`}
               className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
               style={{
                 borderRadius: "64px",
@@ -207,74 +184,105 @@ const Page: React.FC = () => {
                 gap: "8px",
               }}
             >
-              <span className="text-sm font-medium">
-                {priceFilter.min !== "" && priceFilter.max !== ""
-                  ? `$${priceFilter.min} - $${priceFilter.max}`
-                  : priceFilter.min !== ""
-                  ? `Min: $${priceFilter.min}`
-                  : `Max: $${priceFilter.max}`}
-              </span>
+              <span className="text-sm font-medium">{value}</span>
               <button
                 className="ml-2 text-blue-500 hover:text-blue-700"
-                onClick={() => handlePriceFilter("", "")}
-                aria-label="Remove price filter"
+                onClick={() => handleRemoveFilter(filterType, value)}
+                aria-label={`Remove filter ${value}`}
               >
                 <IoCloseOutline size={16} />
               </button>
             </div>
-          ) : null}
-          {Object.keys(appliedFilters).length > 0 && (
+          ))
+        )}
+        {priceFilter.min !== "" || priceFilter.max !== "" ? (
+          <div
+            className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
+            style={{
+              borderRadius: "64px",
+              padding: "4px 12px",
+              height: "28px",
+              borderWidth: "1px",
+              borderColor: "#B4BEF5",
+              gap: "8px",
+            }}
+          >
+            <span className="text-sm font-medium">
+              {priceFilter.min !== "" && priceFilter.max !== ""
+                ? `$${priceFilter.min} - $${priceFilter.max}`
+                : priceFilter.min !== ""
+                ? `Min: $${priceFilter.min}`
+                : `Max: $${priceFilter.max}`}
+            </span>
             <button
-              className="flex items-center bg-transparent text-[#566DED] font-medium"
-              style={{
-                border: "none",
-                gap: "8px",
-                fontFamily: "Raleway, sans-serif",
-                fontSize: "14px",
-                lineHeight: "20px",
-              }}
-              onClick={handleClearFilters}
+              className="ml-2 text-blue-500 hover:text-blue-700"
+              onClick={() => handlePriceFilter("", "")}
+              aria-label="Remove price filter"
             >
-              <RiDeleteBin6Line size={16} />
-              <span>Limpiar filtros</span>
+              <IoCloseOutline size={16} />
             </button>
-          )}
-        </div>
-
-        <CarGrid cars={currentItems} viewMode={viewMode} />
-
-        <div className="flex justify-between items-center px-4 mt-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="text-blue-500 hover:underline disabled:text-gray-400"
-          >
-            Anterior
-          </button>
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 rounded ${
-                  currentPage === i + 1
-                    ? "bg-blue-500 text-white"
-                    : "text-blue-500 hover:bg-blue-100"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
           </div>
+        ) : null}
+        {Object.keys(appliedFilters).length > 0 && (
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="text-blue-500 hover:underline disabled:text-gray-400"
+            className="flex items-center bg-transparent text-[#566DED] font-medium"
+            style={{
+              border: "none",
+              gap: "8px",
+              fontFamily: "Raleway, sans-serif",
+              fontSize: "14px",
+              lineHeight: "20px",
+            }}
+            onClick={handleClearFilters}
           >
-            Próximo
+            <RiDeleteBin6Line size={16} />
+            <span>Limpiar filtros</span>
           </button>
+        )}
+      </div>
+
+      <div className="px-4 text-gray-700 font-medium">
+        {filteredCars.length} carro
+        {filteredCars.length !== 1 ? "s" : ""} encontrado
+        {filteredCars.length !== 1 ? "s" : ""}
+      </div>
+
+      {/* Grid de autos */}
+      <CarGrid cars={currentItems} viewMode={viewMode} />
+
+      {/* Paginación */}
+      <div className="flex justify-between items-center px-4 mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="text-blue-500 hover:underline disabled:text-gray-400"
+        >
+          Anterior
+        </button>
+        <div className="flex items-center gap-2">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded ${
+                currentPage === i + 1
+                  ? "bg-blue-500 text-white"
+                  : "text-blue-500 hover:bg-blue-100"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
-      </section>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="text-blue-500 hover:underline disabled:text-gray-400"
+        >
+          Próximo
+        </button>
+      </div>
+    </section>
     </div>
   );
 };
