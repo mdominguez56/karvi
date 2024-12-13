@@ -17,6 +17,10 @@
    npm run dev
    ```
 
+## APP desplegada en Vercel
+Para acceder directamente a la aplicación sin tener que correr el proyecto localmente, puedes acceder al siguiente link:
+[https://karvi-ten.vercel.app/](https://karvi-ten.vercel.app/)
+
 ## Tecnologías usadas
 
 - **Next.js**
@@ -35,6 +39,6 @@
 
 ## Features pendientes
 
-- **Deploy** de la app.
 - Agregar **más pruebas unitarias**.
 - **Fix** botón de "Ver Favoritos".
+- **Situar correctamente** el icono de agregar a favoritos en Card de autos.
