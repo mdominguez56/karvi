@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
+import { FaAngleRight, FaAngleLeft, FaCalculator } from "react-icons/fa6";
 import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
 import { useFavorites } from "../context/FavoritesContext";
 import { CarCardProps } from "../types";
@@ -64,9 +64,9 @@ const CarCard: React.FC<CarCardProps> = ({ car, viewMode }) => {
 
       <div className="flex flex-col flex-1">
         <div className="flex justify-between">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <span className="bg-gray-200 px-2 py-1 rounded">{car.year}</span>
-            <span className="bg-gray-200 px-2 py-1 rounded">
+          <div className="flex items-center gap-2 text-[12px] text-[#1B2141] font-medium">
+            <span className="bg-gray-200 px-2 py-1 rounded-full">{car.year}</span>
+            <span className="bg-gray-200 px-2 py-1 rounded-full">
               {car.mileage.toLocaleString()} km
             </span>
           </div>
@@ -85,6 +85,12 @@ const CarCard: React.FC<CarCardProps> = ({ car, viewMode }) => {
           R$ {car.price.toLocaleString()}
         </p>
         <p className="text-sm text-gray-500">{car.city}</p>
+        <button
+          className="mt-4 flex items-center justify-center bg-[#566DED] text-white font-bold text-[14px] rounded-full py-2 px-6 hover:bg-blue-600 transition"
+        >
+          <FaCalculator className="mr-2" />
+          Simular parcelas
+        </button>
       </div>
     </div>
   );

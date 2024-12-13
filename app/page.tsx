@@ -152,7 +152,6 @@ const Page: React.FC = () => {
         </div>
       </div>
 
-      {/* Aside para filtros y botón de favoritos */}
       <aside
         className={`${
           showFilters || !window.matchMedia("(max-width: 1024px)").matches
@@ -168,22 +167,37 @@ const Page: React.FC = () => {
           onPriceFilter={handlePriceFilter}
           priceFilter={priceFilter}
         />
-        {/* Botón Ver Favoritos */}
-        <div className="mt-4">
-          <button
-            onClick={() => (window.location.href = "/favorites")}
-            className="bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition w-full"
-          >
-            Ver Favoritos
-          </button>
-        </div>
       </aside>
       <section className="flex-1 flex flex-col gap-4">
-        <div className="flex flex-wrap items-center gap-2 px-4">
-          {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
-            values.map((value) => (
+        <div className="flex flex-wrap items-center justify-between px-4 gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {Object.entries(appliedFilters).flatMap(([filterType, values]) =>
+              values.map((value) => (
+                <div
+                  key={`${filterType}-${value}`}
+                  className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
+                  style={{
+                    borderRadius: "64px",
+                    padding: "4px 12px",
+                    height: "28px",
+                    borderWidth: "1px",
+                    borderColor: "#B4BEF5",
+                    gap: "8px",
+                  }}
+                >
+                  <span className="text-sm font-medium">{value}</span>
+                  <button
+                    className="ml-2 text-blue-500 hover:text-blue-700"
+                    onClick={() => handleRemoveFilter(filterType, value)}
+                    aria-label={`Remove filter ${value}`}
+                  >
+                    <IoCloseOutline size={16} />
+                  </button>
+                </div>
+              ))
+            )}
+            {priceFilter.min !== "" || priceFilter.max !== "" ? (
               <div
-                key={`${filterType}-${value}`}
                 className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
                 style={{
                   borderRadius: "64px",
@@ -194,45 +208,23 @@ const Page: React.FC = () => {
                   gap: "8px",
                 }}
               >
-                <span className="text-sm font-medium">{value}</span>
+                <span className="text-sm font-medium">
+                  {priceFilter.min !== "" && priceFilter.max !== ""
+                    ? `$${priceFilter.min} - $${priceFilter.max}`
+                    : priceFilter.min !== ""
+                    ? `Min: $${priceFilter.min}`
+                    : `Max: $${priceFilter.max}`}
+                </span>
                 <button
                   className="ml-2 text-blue-500 hover:text-blue-700"
-                  onClick={() => handleRemoveFilter(filterType, value)}
-                  aria-label={`Remove filter ${value}`}
+                  onClick={() => handlePriceFilter("", "")}
+                  aria-label="Remove price filter"
                 >
                   <IoCloseOutline size={16} />
                 </button>
               </div>
-            ))
-          )}
-          {priceFilter.min !== "" || priceFilter.max !== "" ? (
-            <div
-              className="flex items-center bg-white text-blue-600 border border-blue-500 px-3 py-1 rounded-full shadow-sm"
-              style={{
-                borderRadius: "64px",
-                padding: "4px 12px",
-                height: "28px",
-                borderWidth: "1px",
-                borderColor: "#B4BEF5",
-                gap: "8px",
-              }}
-            >
-              <span className="text-sm font-medium">
-                {priceFilter.min !== "" && priceFilter.max !== ""
-                  ? `$${priceFilter.min} - $${priceFilter.max}`
-                  : priceFilter.min !== ""
-                  ? `Min: $${priceFilter.min}`
-                  : `Max: $${priceFilter.max}`}
-              </span>
-              <button
-                className="ml-2 text-blue-500 hover:text-blue-700"
-                onClick={() => handlePriceFilter("", "")}
-                aria-label="Remove price filter"
-              >
-                <IoCloseOutline size={16} />
-              </button>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
           {Object.keys(appliedFilters).length > 0 && (
             <button
               className="flex items-center bg-transparent text-[#566DED] font-medium"

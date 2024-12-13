@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import FilterSection from "./FilterSection";
 import { Car } from "../types";
 import { FaChevronDown } from "react-icons/fa6";
@@ -73,12 +74,12 @@ const Filter: React.FC<FilterProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       {["Marca", "Modelo", "Año", "Versión", "Ciudad"].map((section) => (
         <div key={section}>
           <button
             onClick={() => toggleSection(section)}
-            className="w-full flex justify-between items-center text-left font-medium"
+            className="w-full flex justify-between items-center text-left font-bold text-gray-700"
           >
             {section}
             <FaChevronDown
@@ -103,7 +104,7 @@ const Filter: React.FC<FilterProps> = ({
       <div>
         <button
           onClick={() => toggleSection("Precio")}
-          className="w-full flex justify-between items-center text-left font-medium"
+          className="w-full flex justify-between items-center text-left font-bold text-gray-700"
         >
           Precio
           <FaChevronDown
@@ -139,6 +140,11 @@ const Filter: React.FC<FilterProps> = ({
           </div>
         )}
       </div>
+      <Link href="/favorites">
+        <button className="bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-600 transition">
+          Ver Favoritos
+        </button>
+      </Link>
     </div>
   );
 };
