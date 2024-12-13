@@ -9,6 +9,8 @@ import { IoCloseOutline } from "react-icons/io5";
 import { RiDeleteBin6Line, RiSoundModuleLine } from "react-icons/ri";
 import { FaTh, FaList } from "react-icons/fa";
 
+const ITEMS_PER_PAGE = 12;
+
 const Page: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [filteredCars, setFilteredCars] = useState<Car[]>([]);
@@ -19,7 +21,8 @@ const Page: React.FC = () => {
   });
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true); 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     const loadCars = async () => {
@@ -34,7 +37,7 @@ const Page: React.FC = () => {
       } catch (error) {
         console.error("Error loading cars:", error);
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
     };
 
@@ -54,6 +57,7 @@ const Page: React.FC = () => {
     setAppliedFilters(newFilters);
 
     applyFilters(newFilters, priceFilter);
+    setCurrentPage(1); // Reset to the first page
   };
 
   const handlePriceFilter = (min: number | "", max: number | "") => {
@@ -64,6 +68,7 @@ const Page: React.FC = () => {
 
     setPriceFilter(updatedPriceFilter);
     applyFilters(appliedFilters, updatedPriceFilter);
+    setCurrentPage(1); // Reset to the first page
   };
 
   const applyFilters = (
@@ -96,7 +101,14 @@ const Page: React.FC = () => {
     setAppliedFilters({});
     setPriceFilter({ min: "", max: "" });
     setFilteredCars(cars);
+    setCurrentPage(1);
   };
+
+  const totalPages = Math.ceil(filteredCars.length / ITEMS_PER_PAGE);
+  const currentItems = filteredCars.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   if (isLoading) {
     return (
@@ -229,7 +241,39 @@ const Page: React.FC = () => {
           )}
         </div>
 
-        <CarGrid cars={filteredCars} viewMode={viewMode} />
+        <CarGrid cars={currentItems} viewMode={viewMode} />
+
+        <div className="flex justify-between items-center px-4 mt-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="text-blue-500 hover:underline disabled:text-gray-400"
+          >
+            Anterior
+          </button>
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === i + 1
+                    ? "bg-blue-500 text-white"
+                    : "text-blue-500 hover:bg-blue-100"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="text-blue-500 hover:underline disabled:text-gray-400"
+          >
+            Próximo
+          </button>
+        </div>
       </section>
     </div>
   );
