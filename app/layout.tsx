@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 export const metadata: Metadata = {
   title: "Compra de Carros Usados e Novos com Histórico Veicular | Karvi",
@@ -44,7 +45,9 @@ export default function RootLayout({
         <meta name="robots" content="INDEX,FOLLOW" />
       </head>
       <body className="antialiased bg-white text-gray-900">
-        <main className="container mx-auto p-4">{children}</main>
+        <FavoritesProvider>
+          <main className="container mx-auto p-4">{children}</main>
+        </FavoritesProvider>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import FilterSection from "./FilterSection";
 import { Car } from "../types";
 import { FaChevronDown } from "react-icons/fa6";
-import { FilterProps } from "../types"
+import { FilterProps } from "../types";
 
 const mapSectionToKey = (section: string): keyof Car => {
   switch (section) {

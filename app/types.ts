@@ -33,3 +33,9 @@ export interface FilterSectionProps {
   onClickItem?: (item: string) => void;
   appliedFilters?: string[];
 }
+
+export interface FavoritesContextProps {
+  favorites: Car[];
+  addToFavorites: (car: Car) => void;
+  removeFromFavorites: (carId: number) => void;
+}

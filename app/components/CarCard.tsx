@@ -3,12 +3,16 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
-import { CarCardProps } from "../types"
+import { MdFavoriteBorder, MdOutlineFavorite } from "react-icons/md";
+import { useFavorites } from "../context/FavoritesContext";
+import { CarCardProps } from "../types";
 
 const CarCard: React.FC<CarCardProps> = ({ car, viewMode }) => {
   const [currentImage, setCurrentImage] = useState(0);
+  const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
 
   const images = ["/car-1.png", "/car-2.png", "/car-3.png"];
+  const isFavorite = favorites.some((fav) => fav.id === car.id);
 
   const handleNextImage = () => {
     setCurrentImage((prev) => (prev + 1) % images.length);
@@ -16,6 +20,13 @@ const CarCard: React.FC<CarCardProps> = ({ car, viewMode }) => {
 
   const handlePrevImage = () => {
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
+  };
+  const toggleFavorite = () => {
+    if (isFavorite) {
+      removeFromFavorites(car.id);
+    } else {
+      addToFavorites(car);
+    }
   };
 
   return (
@@ -52,11 +63,19 @@ const CarCard: React.FC<CarCardProps> = ({ car, viewMode }) => {
       </div>
 
       <div className="flex flex-col flex-1">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span className="bg-gray-200 px-2 py-1 rounded">{car.year}</span>
-          <span className="bg-gray-200 px-2 py-1 rounded">
-            {car.mileage.toLocaleString()} km
-          </span>
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span className="bg-gray-200 px-2 py-1 rounded">{car.year}</span>
+            <span className="bg-gray-200 px-2 py-1 rounded">
+              {car.mileage.toLocaleString()} km
+            </span>
+          </div>
+          <button
+            onClick={toggleFavorite}
+            className="text-red-500 hover:text-red-700"
+          >
+            {isFavorite ? <MdOutlineFavorite size={24} /> : <MdFavoriteBorder size={24} />}
+          </button>
         </div>
         <h3 className="text-lg font-bold mt-2">
           {car.brand} {car.model}
