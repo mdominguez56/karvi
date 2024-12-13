@@ -39,3 +39,16 @@ export interface FavoritesContextProps {
   addToFavorites: (car: Car) => void;
   removeFromFavorites: (carId: number) => void;
 }
+
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export interface SelectedFiltersProps {
+  appliedFilters: Record<string, string[]>;
+  priceFilter: { min: number | ""; max: number | "" };
+  handleRemoveFilter: (filterType: string, value: string) => void;
+  handleClearFilters: () => void;
+}

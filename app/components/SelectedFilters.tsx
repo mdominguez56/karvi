@@ -1,13 +1,7 @@
 import React from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
-
-interface SelectedFiltersProps {
-  appliedFilters: Record<string, string[]>;
-  priceFilter: { min: number | ""; max: number | "" };
-  handleRemoveFilter: (filterType: string, value: string) => void;
-  handleClearFilters: () => void;
-}
+import { SelectedFiltersProps } from "../types"
 
 const SelectedFilters: React.FC<SelectedFiltersProps> = ({
   appliedFilters,
