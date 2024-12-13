@@ -43,3 +43,4 @@ Para acceder directamente a la aplicación sin tener que correr el proyecto loca
 - **Fix** botón de "Ver Favoritos".
 - **Situar correctamente** el icono de agregar a favoritos en Card de autos.
 - **Se pueden mejorar las practicas de SEO**, como por ejemplo agregando H1 y H2 al site (no los agregue porque no los vi en el Figma) y agregando meta tags especificos para cada url (home y favorites).
+- Agregar **linters** al proyecto.
