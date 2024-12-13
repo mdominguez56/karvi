@@ -31,14 +31,15 @@ Para acceder directamente a la aplicación sin tener que correr el proyecto loca
 
 ## Principales puntos a tener en cuenta
 
-- Se agregaron **SEO tags**, siguiendo buenas prácticas de SEO.
+- Se agregaron **SEO tags**, siguiendo buenas prácticas de SEO (tome como referencia el sitio de [https://www.karvi.com.br/](https://www.karvi.com.br/)).
 - Se agregaron **imágenes iguales para todos los autos**, teniendo en cuenta que la API no estaba devolviendo imágenes, para así poder realizar el carrousel de fotos.
 - Se utilizó **useContext** para almacenar el estado de los **Favoritos**.
 - Todos los **types de TypeScript** se pusieron en el archivo `types.ts`.
 - Se agregaron algunas **pruebas unitarias** con **Jest**.
 
-## Features pendientes
+## Features y mejoras pendientes
 
 - Agregar **más pruebas unitarias**.
 - **Fix** botón de "Ver Favoritos".
 - **Situar correctamente** el icono de agregar a favoritos en Card de autos.
+- **Se pueden mejorar las practicas de SEO**, como por ejemplo agregando H1 y H2 al site (no los agregue porque no los vi en el Figma) y agregando meta tags especificos para cada url (home y favorites).
